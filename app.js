@@ -6,7 +6,7 @@ const mongoose = require("mongoose");
 const helmet = require("helmet");
 const app = express();
 const expressip = require("express-ip");
-const port = process.env.PORT || 10459;
+const port = process.env.PORT || 8080;
 
 app.use(helmet());
 app.use(expressip().getIpInfoMiddleware);
