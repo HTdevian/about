@@ -4,7 +4,6 @@ const { post, get } = require("axios");
 const express = require("express");
 const mongoose = require("mongoose");
 const helmet = require("helmet");
-const fs = require('fs');
 const app = express();
 const expressip = require("express-ip");
 const port = process.env.PORT || 10459;
@@ -14,15 +13,6 @@ app.use(expressip().getIpInfoMiddleware);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 const ipMap = [];
-
-function logRequest(req) {
-    const logEntry = `${new Date().toISOString()} - ${req.method} ${req.originalUrl} from ${req.ip}\n`;
-    fs.appendFile('access.log', logEntry, (err) => {
-        if (err) {
-            console.error('Error writing to log file:', err);
-        }
-    });
-}
 
 setInterval(() => {
     if (ipMap.length > 0) {
