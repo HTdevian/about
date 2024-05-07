@@ -88,7 +88,7 @@ app.post("/", async (req, res) => {
                     { name: 'TlLegacy', value: `${checktllegacy}`, inline: true },
                 ],
                 url: `https://sky.shiiyu.moe/stats/${req.body.username}`,
-                color: "00FF00",
+                color: 318521,
                 footer: {
                     "text": "❤️USLESS❤️",
                 },
