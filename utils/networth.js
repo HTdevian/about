@@ -5,37 +5,38 @@ async function getProfiles(uuid) {
 		// Initialize variables
 		let bestNetworth = 0;
 		const profiles = { stats: { bestNetworth: "0" }, profiles: {} };
-		const url = `https://sky.shiiyu.moe/api/v2/player_skyblock/${uuid}?networth=true`;
+		const url = `https://sky.shiiyu.moe/api/v2/profile/${uuid}`;
 
 		// API HTTP request
 		const response = await axios.get(url);
 
 		// Fetch profile IDs from request data
 		const playerData = response.data;
-		const profilesDict = playerData.data.profiles;
+		const profilesDict = playerData.profiles;
 		const profileIds = Object.keys(profilesDict);
+		console.error(`An error occurred while trying to get networth: ${profileIds}`);
 
 		// Loop through each profile and check networth and gamemode
 		for (let profileId of profileIds) {
 			let profileInfo = {};
 
 			// Fetch gamemode if profile type isn't normal
-			if ("gamemode" in playerData.data.profiles[profileId].stats) {
-				profileInfo.gamemode = playerData.data.profiles[profileId].stats.gamemode.replace("island", "stranded");
+			if ("game_mode" in playerData.profiles[profileId]) {
+				profileInfo.gamemode = playerData.profiles[profileId].game_mode.replace("island", "stranded");
 			} else {
 				profileInfo.gamemode = "normal";
 			}
 
 			// Fetch networth
-			const networth = playerData.data.profiles[profileId].members[uuid].nwDetailed.unsoulboundNetworth;
-			const unsoulboundNetworth = playerData.data.profiles[profileId].members[uuid].nwDetailed.unsoulboundNetworth;
+			const networth = playerData.profiles[profileId].data.networth.networth;
+			const unsoulboundNetworth = playerData.profiles[profileId].data.networth.unsoulboundNetworth;
 
 			if (networth > bestNetworth) {
 				bestNetworth = networth;
 			}
 
 			// Append information to all profiles dict
-			profileInfo.networth = formatNumber(networth);
+			profileInfo.soulboundNetworth = formatNumber(networth);
 			profileInfo.unsoulboundNetworth = formatNumber(unsoulboundNetworth);
 
 			profiles.profiles[profileId] = profileInfo;
